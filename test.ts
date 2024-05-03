@@ -1,5 +1,4 @@
-// GridComponent.jsx
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useRef } from "react";
 import { AgGridReact } from "@ag-grid-community/react";
 import "@ag-grid-community/styles/ag-grid.css";
 import "@ag-grid-community/styles/ag-theme-quartz.css";
@@ -11,12 +10,13 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 const GridComponent = () => {
   const [rowData, setRowData] = useState();
-  const [gridApi, setGridApi] = useState(null);
-  const [columnApi, setColumnApi] = useState(null);
+  const gridApiRef = useRef(null);
+  const columnApiRef = useRef(null);
 
   const onGridReady = useCallback((params) => {
-    setGridApi(params.api);
-    setColumnApi(params.columnApi);
+    const { api, columnApi } = params;
+    gridApiRef.current = api;
+    columnApiRef.current = columnApi;
 
     fetch("https://www.ag-grid.com/example-assets/olympic-winners.json")
       .then((resp) => resp.json())
@@ -27,7 +27,7 @@ const GridComponent = () => {
 
   const handleCheckboxChange = (isChecked) => {
     const selectedRows = [];
-    gridApi.forEachNode((node) => {
+    gridApiRef.current?.forEachNode((node) => {
       node.setSelected(isChecked);
       selectedRows.push(node.data);
     });
@@ -53,7 +53,7 @@ const GridComponent = () => {
         },
       },
     ],
-    [gridApi]
+    []
   );
 
   return (
@@ -68,28 +68,3 @@ const GridComponent = () => {
 };
 
 export default GridComponent;
-
-
-
-
-
-
-
-
-
-// CheckboxHeader.jsx
-import React from "react";
-
-const CheckboxHeader = ({ onCheckboxChange }) => {
-  const handleCheckboxChange = (event) => {
-    onCheckboxChange(event.target.checked);
-  };
-
-  return (
-    <div className="ag-header-cell-label" role="presentation">
-      All <input type="checkbox" id="checkbox" onChange={handleCheckboxChange} />
-    </div>
-  );
-};
-
-export default CheckboxHeader;
