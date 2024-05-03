@@ -1,12 +1,23 @@
-// Custom cell renderer for checkbox
-function checkboxRenderer(params) {
-  const selected = params.data.selected ? 'checked' : '';
-  return `<input type="checkbox" ${selected} />`;
-}
-
-// Column definition
+// Column definition with custom cell renderer for checkbox and selection logic
 const columnDefs = [
-  { headerName: '', field: 'checkbox', cellRenderer: checkboxRenderer },
+  {
+    headerName: '',
+    field: 'checkbox',
+    cellRenderer: function(params) {
+      // Function to toggle selection status
+      function toggleSelection() {
+        params.data.selected = !params.data.selected;
+        // Refresh the row to reflect the changes
+        params.api.refreshCells({ rowNodes: [params.node], force: true });
+      }
+
+      // Initial checkbox state based on selection status
+      const checked = params.data.selected ? 'checked' : '';
+
+      // Return HTML for the checkbox
+      return `<input type="checkbox" ${checked} onchange="(${toggleSelection})()" />`;
+    },
+  },
   // Other column definitions...
 ];
 
