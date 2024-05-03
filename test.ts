@@ -1,36 +1,47 @@
-// Column definition with custom cell renderer for checkbox and selection logic
-const columnDefs = [
-  {
-    headerName: '',
-    field: 'checkbox',
-    cellRenderer: function(params) {
-      // Function to toggle selection status
-      function toggleSelection() {
-        params.data.selected = !params.data.selected;
-        // Refresh the row to reflect the changes
-        params.api.refreshCells({ rowNodes: [params.node], force: true });
-      }
+import React, { useState } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 
-      // Initial checkbox state based on selection status
-      const checked = params.data.selected ? 'checked' : '';
+const MyGridComponent = () => {
+  const [gridApi, setGridApi] = useState(null);
+  const [columnDefs] = useState([
+    { headerName: '', field: 'checkbox', headerCheckboxSelection: true, checkboxSelection: true, width: 40 },
+    { headerName: 'Column 1', field: 'col1' },
+    { headerName: 'Column 2', field: 'col2' }
+  ]);
 
-      // Return HTML for the checkbox
-      return `<input type="checkbox" ${checked} onchange="(${toggleSelection})()" />`;
-    },
-  },
-  // Other column definitions...
-];
+  const onGridReady = params => {
+    setGridApi(params.api);
+    // Fetch data from the server and set it using params.api.setServerSideDatasource(...)
+  };
 
-// Data with a selected property for each row
-const rowData = [
-  { id: 1, name: 'Row 1', selected: false },
-  { id: 2, name: 'Row 2', selected: false },
-  // More rows...
-];
+  const handleHeaderCheckboxChange = (event) => {
+    const isSelected = event.target.checked;
+    const selectedNodes = [];
+    gridApi.forEachNodeAfterFilterAndSort(node => {
+      selectedNodes.push(node);
+    });
+    selectedNodes.forEach(node => {
+      node.setSelected(isSelected);
+    });
+  };
 
-// Grid options
-const gridOptions = {
-  columnDefs: columnDefs,
-  rowData: rowData,
-  // Other grid options...
+  return (
+    <div className="ag-theme-alpine" style={{ height: '400px', width: '600px' }}>
+      <AgGridReact
+        columnDefs={columnDefs}
+        onGridReady={onGridReady}
+        rowSelection="multiple"
+        serverSideStoreType="partial"
+        // Add server-side row model configurations here
+      />
+      <div className="header-checkbox">
+        <input type="checkbox" onChange={handleHeaderCheckboxChange} />
+        <span>Select All</span>
+      </div>
+    </div>
+  );
 };
+
+export default MyGridComponent;
