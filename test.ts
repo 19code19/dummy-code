@@ -9,3 +9,9 @@ const CheckboxHeader = ({ onCheckboxChange }) => {
 };
 
 export default CheckboxHeader;
+
+
+{
+      field: "total",
+      headerComponentFramework: CheckboxHeader, // Use CheckboxHeader component as headerComponent
+    },
