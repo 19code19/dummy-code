@@ -8,10 +8,10 @@ import CheckboxHeader from "./CheckboxHeader";
 
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
-const GridComponent = () => {
-  const [rowData, setRowData] = useState();
-  const gridApiRef = useRef(null);
-  const columnApiRef = useRef(null);
+const GridComponent: React.FC = () => {
+  const [rowData, setRowData] = useState<any[] | undefined>();
+  const gridApiRef = useRef<any>(null);
+  const columnApiRef = useRef<any>(null);
 
   const onGridReady = useCallback((params) => {
     const { api, columnApi } = params;
@@ -25,13 +25,19 @@ const GridComponent = () => {
       });
   }, []);
 
-  const handleCheckboxChange = (isChecked) => {
-    const selectedRows = [];
-    gridApiRef.current?.forEachNode((node) => {
+  const handleCheckboxChange = (isChecked: boolean) => {
+    const selectedRows: any[] = [];
+    gridApiRef.current?.forEachNode((node: any) => {
       node.setSelected(isChecked);
       selectedRows.push(node.data);
     });
   };
+
+  const frameworkComponents = useMemo(() => {
+    return {
+      checkboxHeader: CheckboxHeader,
+    };
+  }, []);
 
   const columnDefs = useMemo(
     () => [
@@ -47,10 +53,7 @@ const GridComponent = () => {
       {
         headerName: "Total",
         field: "total",
-        headerComponentFramework: CheckboxHeader,
-        headerComponentParams: {
-          onCheckboxChange: handleCheckboxChange,
-        },
+        headerComponent: "checkboxHeader", // Use the framework component here
       },
     ],
     []
@@ -62,6 +65,7 @@ const GridComponent = () => {
         rowData={rowData}
         columnDefs={columnDefs}
         onGridReady={onGridReady}
+        frameworkComponents={frameworkComponents} // Add frameworkComponents here
       />
     </div>
   );
