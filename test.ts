@@ -10,8 +10,8 @@ ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 const GridComponent: React.FC = () => {
   const [rowData, setRowData] = useState<any[] | undefined>();
-  const gridApiRef = useRef<any>(null);
-  const columnApiRef = useRef<any>(null);
+  const gridApiRef = useRef<any>(null); // Explicitly specify the type of gridApiRef
+  const columnApiRef = useRef<any>(null); // Explicitly specify the type of columnApiRef
 
   const onGridReady = useCallback((params) => {
     const { api, columnApi } = params;
@@ -27,17 +27,11 @@ const GridComponent: React.FC = () => {
 
   const handleCheckboxChange = (isChecked: boolean) => {
     const selectedRows: any[] = [];
-    gridApiRef.current?.forEachNode((node: any) => {
+    gridApiRef.current?.forEachNode((node: any) => { // Specify the type of node as any
       node.setSelected(isChecked);
       selectedRows.push(node.data);
     });
   };
-
-  const frameworkComponents = useMemo(() => {
-    return {
-      checkboxHeader: CheckboxHeader,
-    };
-  }, []);
 
   const columnDefs = useMemo(
     () => [
@@ -53,7 +47,10 @@ const GridComponent: React.FC = () => {
       {
         headerName: "Total",
         field: "total",
-        headerComponent: "checkboxHeader", // Use the framework component here
+        headerComponentFramework: CheckboxHeader,
+        headerComponentParams: {
+          onCheckboxChange: handleCheckboxChange,
+        },
       },
     ],
     []
@@ -65,7 +62,6 @@ const GridComponent: React.FC = () => {
         rowData={rowData}
         columnDefs={columnDefs}
         onGridReady={onGridReady}
-        frameworkComponents={frameworkComponents} // Add frameworkComponents here
       />
     </div>
   );
