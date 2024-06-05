@@ -4,13 +4,17 @@ dotnet add package Microsoft.AspNetCore.Authentication.OpenIdConnect
 dotnet add package Microsoft.IdentityModel.Protocols.OpenIdConnect
 
 
-CREATE TABLE SessionData (
-    Id NVARCHAR(449) NOT NULL PRIMARY KEY,
-    Value VARBINARY(MAX) NOT NULL,
-    ExpiresAtTime DATETIMEOFFSET NOT NULL,
-    SlidingExpirationInSeconds BIGINT NULL,
-    AbsoluteExpiration DATETIMEOFFSET NULL
-);
+IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'SessionData')
+BEGIN
+    CREATE TABLE SessionData (
+        Id NVARCHAR(449) NOT NULL PRIMARY KEY,
+        Value VARBINARY(MAX) NOT NULL,
+        ExpiresAtTime DATETIMEOFFSET NOT NULL,
+        SlidingExpirationInSeconds BIGINT NULL,
+        AbsoluteExpiration DATETIMEOFFSET NULL
+    );
+END;
+
 
 
 
