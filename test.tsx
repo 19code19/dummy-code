@@ -1,19 +1,19 @@
 export function getData(): any[] {
     return [
-        { row: 'Row 1', name: 'option1' },
-        { row: 'Row 2', name: 'option1' },
-        { row: 'Row 3', name: 'option1' },
-        { row: 'Row 4', name: 'option2' },
-        { row: 'Row 5', name: 'Missy Franklin' },
-        { row: 'Row 6', name: 'Ryan Lochte' },
-        { row: 'Row 7', name: 'Allison Schmitt' },
-        { row: 'Row 8', name: 'Natalie Coughlin' },
-        { row: 'Row 9', name: 'Ian Thorpe' },
-        { row: 'Row 10', name: 'Bob Mill' },
-        { row: 'Row 11', name: 'Willy Walsh' },
-        { row: 'Row 12', name: 'Sarah McCoy' },
-        { row: 'Row 13', name: 'Jane Jack' },
-        { row: 'Row 14', name: 'Tina Wills' },
+        { row: 'Row 1', name: true },
+        { row: 'Row 2', name: true },
+        { row: 'Row 3', name: true},
+        { row: 'Row 4', name: true },
+        { row: 'Row 5', name: true },
+        { row: 'Row 6', name: true},
+        { row: 'Row 7', name: false },
+        { row: 'Row 8', name: false},
+        { row: 'Row 9', name: false },
+        { row: 'Row 10', name: false},
+        { row: 'Row 11', name: false },
+        { row: 'Row 12', name: false },
+        { row: 'Row 13', name: false },
+        { row: 'Row 14', name: false },
     ];
 }
 
@@ -82,8 +82,8 @@ export default forwardRef(({ model, onModelChange, getValue }: CustomFilterProps
                     <input
                         type="radio"
                         name="filterOption"
-                        value="option1"
-                        checked={model?.selectedValue === 'option1'}
+                        value='true'
+                        checked={model?.selectedValue === 'true'}
                         onChange={onChange}
                         className="form-control"
                     />
@@ -95,8 +95,8 @@ export default forwardRef(({ model, onModelChange, getValue }: CustomFilterProps
                     <input
                         type="radio"
                         name="filterOption"
-                        value="option2"
-                        checked={model?.selectedValue === 'option2'}
+                        value="false"
+                        checked={model?.selectedValue === 'false'}
                         onChange={onChange}
                         className="form-control"
                     />
@@ -110,7 +110,6 @@ export default forwardRef(({ model, onModelChange, getValue }: CustomFilterProps
         </div>
     );
 });
-
 
 
 
